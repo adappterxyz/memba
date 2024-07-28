@@ -9,7 +9,7 @@ export const ajax = async(endpoint,input)=>{
         method: 'POST',
         headers: {
           'Content-Type': 'text/plain',
-        //    'Authorization': JSON.stringify(auth)
+            'Authorization': JSON.stringify(auth)
         },
         body: JSON.stringify(input)
       });
