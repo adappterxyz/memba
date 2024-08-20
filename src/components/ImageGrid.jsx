@@ -7,21 +7,20 @@ import {ajax, tracker } from '../common';
 
  
 
-const ImageGrid = ({ startToggleInterval, intervalRef, setRestState, initPref, membership, setbookmarkinfo, bookmarkinfo, images, setImages, tokens, id, coordinates, setTokens, setIsLoading, bookmarks, setBookmarks }) => {
+const ImageGrid = ({page,setPage,dummyImages,effectiveResults,setEffectiveResults,scrollDistance,setScrollDistance, startToggleInterval, intervalRef, setRestState, initPref, membership, setbookmarkinfo, bookmarkinfo, images, setImages, tokens, id, coordinates, setTokens, setIsLoading, bookmarks, setBookmarks }) => {
 
-  const [page, setPage] = useState(1);
-  const [scrollDistance, setScrollDistance] = useState(1);
+
+
   const [animate, setAnimate] = useState(false);
   const [scrolling, setScrolling] = useState(false);
   const touchStartY = useRef(0);
   const observer = useRef(null);
-  const [isClaiming, setIsClaiming] = useState(false);
   const [swiped, setSwiped] = useState(false);
   const swipedRef = useRef(false);
   const userFriendlyAddress = useTonAddress();
   const rawAddress = useTonAddress(false);
   const [walletAddress, setWalletAddress] = useState({ userFriendly: '', raw: '' });
-  const dummyImages = [];
+
   const [speeding, setSpeeding] = useState(false);
   const [spam, setSpam] = useState(0);
   const originalScrollY = useRef(0);
@@ -32,8 +31,6 @@ const ImageGrid = ({ startToggleInterval, intervalRef, setRestState, initPref, m
   const [pluses, setPluses] = useState([]);
   const [newPluses, setNewPluses] = useState([]);
 
-
-  const [effectiveResults,setEffectiveResults]=useState(0);
 
     useEffect(() => {
     scrollingRef.current = scrolling;
@@ -199,7 +196,7 @@ const ImageGrid = ({ startToggleInterval, intervalRef, setRestState, initPref, m
 
     setIsLoading(false);
   };
-
+/*
   const claim = async () => {
     if (isClaiming) return; // Prevent duplicate claims
 
@@ -266,7 +263,7 @@ const ImageGrid = ({ startToggleInterval, intervalRef, setRestState, initPref, m
    
   }
   };
-
+  */
   const fetchMoreData = () => {
     setPage((prevPage) => prevPage + 1);
   };
@@ -608,7 +605,7 @@ useEffect(() => {
 
   return (
     <div>
-      <button onClick={claim} disabled={isClaiming} className={`scroll-counter ${animate ? 'animate' : ''}`}>
+      <button className={`scroll-counter ${animate ? 'animate' : ''}`}>
                <div class="box">Distance: <span className='distance'>{scrollDistance}</span> km </div> 
    
       </button>

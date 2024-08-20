@@ -296,8 +296,7 @@ const handleuselink= ()=>{
   return (
     <Box className={`poiform `+getstep()} component="form" noValidate autoComplete="off" onSubmit={handleSubmit} sx={{ overflowY:"auto", p: 2, maxWidth: 500, mx: 'auto' }}>
  <Typography sx={{ p: 2 }} variant="p">
-  <img src="dj-party.gif"/>
-  <br/><AddLocation/> Mark a Point of Interest</Typography>
+  <br/><AddLocation/> <br/>Mark a Point of Interest</Typography>
       <Box className="imageupload" >
       {formData.imageUrl && 
       <div className="preview">
@@ -434,7 +433,7 @@ const handleuselink= ()=>{
               renderInput={(params) => <TextField {...params} fullWidth margin="dense" />}
             />
             <div style={{padding:10}}></div>
-            <DateTimePicker label="End Date/Time" fxormat="dd-MMMM HH:mm" value={formData.end} onChange={(newValue) => handleDateChange(newValue, 'end')}
+            <DateTimePicker label="End Date/Time"  c value={formData.end} onChange={(newValue) => handleDateChange(newValue, 'end')}
               renderInput={(params) => <TextField {...params} fullWidth margin="dense" />}
             />
           </Box>

@@ -32,14 +32,14 @@ function App() {
   const [tele,setTele]=useState(false);
   const [dp, setDp]= useState('');
   const [restState, setRestState] = useState(false);
-  
+  const [scrollDistance, setScrollDistance] = useState(1);
   const [group,setGroup]=useState([])
   const apiUrl = process.env.REACT_APP_API_URL;
   const [images, setImages] = useState([]);
-  
-
+  const [effectiveResults,setEffectiveResults]=useState(0);
+  const dummyImages = [];
   const intervalRef = useRef(null);
-
+  const [page, setPage] = useState(1);
 
 
 
@@ -69,6 +69,38 @@ setTimeout(()=>{
 },3000)
 
 }
+const loadInitialImages = () => {
+  setTimeout(()=>{ window.scrollTo(0,30); console.log("scroll"); }, 1000 );
+  fetchImages(1, true);
+};
+const fetchImages = async (page, initial = false) => {
+  setIsLoading(true);
+  var er = 0;
+  if(initial){  er =0;  }else{  er=effectiveResults; }
+  const auth = window.Telegram.WebApp.initData;
+  try {
+    //showmebe.kwang-783.workers.dev
+    const response = await fetch(`https://api.showme.asia/getimages`, {  
+      mode:'cors',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain',
+      //  'Authorization': JSON.stringify(auth)
+      },
+      body: JSON.stringify({ page , effectiveResults: er , userId, distance: parseFloat(scrollDistance) ,coordinates, auth, pref:initPref, membership})
+    });
+    const rdata = await response.json();
+    setEffectiveResults(effectiveResults+rdata.effectiveResults);
+    const data = rdata.sortedResults;
+    setImages((prevImages) => initial ? data : [...prevImages, ...data]);
+  } catch (error) {
+    console.error('Failed to fetch images, using dummy data', error);
+    const data = [];
+    setImages((prevImages) => [...prevImages, ...data]);
+  }
+
+  setIsLoading(false);
+};
 const startToggleInterval = () => {
   intervalRef.current = setTimeout(() => {
     setRestState(true); // Toggle the state
@@ -158,6 +190,10 @@ const startToggleInterval = () => {
               <div className={`${panelIsVisible ? 'lock' : ''}`}>
 <div className="topspacer"></div>
               <ImageGrid 
+                 page={page}
+                 setPage={setPage}
+              scrollDistance={scrollDistance}
+              setScrollDistance={setScrollDistance}
               intervalRef={intervalRef}
               startToggleInterval={startToggleInterval}
               setRestState={setRestState}
@@ -165,6 +201,8 @@ const startToggleInterval = () => {
               loadandmessage={loadandmessage} 
               bookmarkinfo={bookmarkinfo} 
               membership={membership}
+              effectiveResults={effectiveResults}
+              setEffectiveResults={setEffectiveResults}
               setbookmarkinfo={setbookmarkinfo} 
               images={images} setImages={setImages} 
               bookmarks={bookmarks} setBookmarks={setBookmarks} 
@@ -177,17 +215,25 @@ const startToggleInterval = () => {
             ) : (
               !isLoading && <div>Waiting for geolocation...</div>
             )}
-  <LoadScript googleMapsApiKey="AIzaSyAz5ZKARehAo1EEpLA4BtHJFu4V5XKZOzk" libraries={['places']}>
+  <LoadScript googleMapsApiKey="AIzaSyCixC3CQoZEDXZtpqAkcBEiLZkR__DBksY" libraries={['places']}>
 
 
   {tele &&
             <RightPanel
+            page={page}
+            setPage={setPage}
+            fetchImages={fetchImages}
+            loadInitialImages={loadInitialImages}
+            scrollDistance={scrollDistance}
+              setScrollDistance={setScrollDistance}
             setIsLoading={setIsLoading}
             coordinates={coordinates} tokens={tokens} setTokens={setTokens}
               panelIsVisible={panelIsVisible}
               username={username}
               setAuthorship={setAuthorship}
               dp = {dp}
+              effectiveResults={effectiveResults}
+              setEffectiveResults={setEffectiveResults}
               authorship={authorship}
               group={group}
               setPanelIsVisible={setPanelIsVisible}
