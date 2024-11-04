@@ -3,12 +3,21 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Masonry from 'react-masonry-css';
 import { useTonAddress, TonConnectButton } from '@tonconnect/ui-react';
 import {ajax, tracker } from '../common';
+import { Cancel, Event, Star, SportsEsports, LocalActivity, WbSunny, DirectionsCarFilled } from '@mui/icons-material'; // Added DirectionsCarFilled for Hitch
 
 
  
 
 const ImageGrid = ({page,setPage,dummyImages,effectiveResults,setEffectiveResults,scrollDistance,setScrollDistance, startToggleInterval, intervalRef, setRestState, initPref, membership, setbookmarkinfo, bookmarkinfo, images, setImages, tokens, id, coordinates, setTokens, setIsLoading, bookmarks, setBookmarks }) => {
-
+  
+  const activityTypes = [
+    { label: "Listing", icon: <Star /> },
+    { label: "Hitch", icon: <DirectionsCarFilled /> }, 
+    { label: "Promotion", icon: <LocalActivity /> },
+    { label: "Event", icon: <Event /> },
+    { label: "Hangout", icon: <WbSunny /> },
+    { label: "Tasks", icon: <SportsEsports /> },// New activity type Hitch
+  ];
 
 
   const [animate, setAnimate] = useState(false);

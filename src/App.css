@@ -356,7 +356,6 @@ thead th {
   display: flex;
   border-radius: 5px;
   box-shadow: 0 0 0px 1px #FFF;
-  animation: rotate-box-shadow 6s linear infinite reverse;
 }
 
 .scrolling .scroll-counter .box {
@@ -531,17 +530,25 @@ animation: bookmarked 5s infinite;
 .poiform{
   box-shadow:0 0 2px 1px #000 inset;
   position:fixed; top:0; left:0; z-index:1000;
-  padding:5%;
+  padding:2px;
   width:100%;
   height:100vh;
+  overflow:auto;
   background:#FFF;
+  display:flex;
   animation: expand 500ms ;
+}
+.poiform > div{
+  display:relative;
+  align-content: center;
+  max-height:700px;
+
 }
 .right-panel .addbtn{
   transform: scale(1);
   transition: transform 0.2s;
   border-radius: 50%;
-  background:#ecac22;
+  background:#0e3c92;
   border:none;
   color:#FFF;
   height:50px; width:50px;
@@ -592,13 +599,15 @@ animation: bookmarked 5s infinite;
   color:green;
 
 }
-.Mui-checked {
+.ctagroup .Mui-checked {
   box-shadow: 0 0 1px 1px var(--button-background);
   padding: 0 !important;
-  margin: 9px !important;
-  background-color: var(--button-background) !important;
+  margin: 20px 9px !important;
+  width:0; height:0px;
+  bxackground-color: var(--button-background) !important;
   animation: fadebg 2s linear infinite;
 }
+
 @keyframes expand {
   0% {
     opacity:0;
@@ -611,13 +620,13 @@ animation: bookmarked 5s infinite;
 }
 @keyframes fadebg {
   0% {
-    box-shadow: 0 0 20px 8px var(--button-background);
+    box-shadow: 0 0 20px 8px #FFF ;
   }
   50% {
-    box-shadow: 0 0 1px 0px var(--button-background);
+    box-shadow: 0 0 1px 0px #FFF ;
   }
   100% {
-    box-shadow: 0 0 19px 8px var(--button-background);
+    box-shadow: 0 0 19px 8px #FFF ;
   }
 }
 
@@ -672,6 +681,8 @@ animation: bookmarked 5s infinite;
   position:relative;
   top:-25px;
   height:0;
+  border-radius:50%;
+  background:#CCC;
   font-weight:bold;
   animation: flashing 2s linear infinite;
 }
@@ -684,13 +695,13 @@ animation: bookmarked 5s infinite;
 }
 @keyframes flashing {
   0% {
-    color: #FFF;
+    color: #ccc;
   }
   50% {
     color: #000;
   }
   100% {
-    color: #FFF;
+    color: #ccc;
   }
 }
 @keyframes rotateAnimation {
@@ -808,6 +819,7 @@ body.scrolling .speeding{ pointer-events:none; display:block !important; positio
 .alert-content {
   background: white;
   padding: 20px;
+  width:100%;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -839,6 +851,18 @@ button {
     margin-bottom: 10px;
   }
 }
+.date *{
+color:#FFF !important;
+}
+
+.date .MuiOutlinedInput-root{
+  border:1px solid #FFF !important;
+  background:rgba(0,0,0,0.6);
+  padding:0;
+  }
+  .date .MuiOutlinedInput-root input{
+height:0.7rem;
+  }
 
 /* Styles for desktop and larger screens */
 @media screen and (min-width: 1200px) {
@@ -859,5 +883,17 @@ button {
     min-width: 0;
     margin: 0;
     display: block;
+  }
+}
+/* Define the keyframes for the gradient animation */
+@keyframes gradientBackground {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }

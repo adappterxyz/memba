@@ -2,16 +2,18 @@ import React, { useState } from 'react';
 import { Button, MenuItem, FormControl, InputLabel, Select, Checkbox, ListItemText, ListSubheader, Chip, Box } from '@mui/material';
 import {ajax, tracker } from '../common';
 import {options} from './Tags';
-const Preferences = ({initPref,setInitPref}) => {
- // const [selectedPreferences, setSelectedPreferences] = useState(initPref);
 
+const Preferences = ({setIsFiltered,initPref,setInitPref}) => {
+ // const [selectedPreferences, setSelectedPreferences] = useState(initPref);
 
 const updatePref= async (event) => {
   await ajax('updatepreferences',{"pref":initPref});
+  setIsFiltered(true);
 }
 const clearPref = async() =>{
   setInitPref([]);
   await ajax('updatepreferences',{"pref":[]});
+  setIsFiltered(true);
 }
   const handleChange = (event) => {
     const value = event.target.value;
@@ -19,10 +21,18 @@ const clearPref = async() =>{
       setInitPref(value);
   };
 
-  const handleDelete =  (preferenceToDelete) => async() => {
-    setInitPref((prevPreferences) => prevPreferences.filter((preference) => preference !== preferenceToDelete) 
-  );
+  const handleDelete = (preferenceToDelete) => async () => {
+    // Calculate the new preferences
+    const updatedPreferences = initPref.filter((preference) => preference !== preferenceToDelete);
+    
+    // Update the state
+    setInitPref(updatedPreferences);
+    
+    // Send the updated preferences to the server
+    await ajax('updatepreferences', { "pref": updatedPreferences });
+    setIsFiltered(true);
   };
+  
 
   return (
     <div>
@@ -65,6 +75,7 @@ const clearPref = async() =>{
         ))}
       </Box>
       <Button onClick={clearPref}>Clear Filters</Button>
+
     </div>
   );
 };

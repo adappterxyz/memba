@@ -21,10 +21,11 @@ const inputStyle = {
   borderRadius: '4px'
 };
 
-const GoogleMapComponent = ({ lat,lng, onLocationSelect }) => {
-    console.log(lat,lng);
+
+const GoogleMapComponent = ({ lat, lng, onLocationSelect }) => {
   const [center, setCenter] = useState({ lat: lat, lng: lng });
   const autocompleteRef = useRef(null);
+  const mapRef = useRef(null); // Ref to store map instance
 
   // Initialize the autocomplete and set up the place changed listener
   const onLoad = (autocomplete) => {
@@ -43,13 +44,43 @@ const GoogleMapComponent = ({ lat,lng, onLocationSelect }) => {
           lng: place.geometry.location.lng()
         };
         setCenter(newCenter);
-        onLocationSelect(newCenter);
+        // Fetch address using Geocoder
+        fetchAddress(newCenter, (address) => {
+          onLocationSelect(newCenter, address);
+        });
       } else {
         console.error("Returned place contains no geometry");
       }
     } else {
       console.error("Autocomplete is not loaded yet!");
     }
+  };
+
+  // Function to use Geocoder to fetch address
+  const fetchAddress = (location, callback) => {
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ location }, (results, status) => {
+      if (status === 'OK' && results[0]) {
+        console.log(results[0]);
+        callback(results[0].formatted_address);
+      } else {
+        console.error('Geocoder failed due to: ' + status);
+        console.log(results[0]);
+        callback(null); // Return null if no address found
+      }
+    });
+  };
+
+  const handleMapClick = (e) => {
+    const newCenter = {
+      lat: e.latLng.lat(),
+      lng: e.latLng.lng()
+    };
+    setCenter(newCenter);
+    // Fetch address using Geocoder
+    fetchAddress(newCenter, (address) => {
+      onLocationSelect(newCenter, address);
+    });
   };
 
   return (
@@ -68,10 +99,7 @@ const GoogleMapComponent = ({ lat,lng, onLocationSelect }) => {
         mapContainerStyle={containerStyle}
         center={center}
         zoom={15}
-        onClick={(e) => onLocationSelect({
-          lat: e.latLng.lat(),
-          lng: e.latLng.lng()
-        })}
+        onClick={handleMapClick}
       >
         <Marker position={center} />
       </GoogleMap>

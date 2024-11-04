@@ -14,6 +14,7 @@ import {ajax, tracker } from './common';
 import { GoogleMap, Marker, Autocomplete, LoadScript } from '@react-google-maps/api';
 
 
+
 function App() {
   const [curract, setCurract] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -215,7 +216,7 @@ const startToggleInterval = () => {
             ) : (
               !isLoading && <div>Waiting for geolocation...</div>
             )}
-  <LoadScript googleMapsApiKey="AIzaSyCixC3CQoZEDXZtpqAkcBEiLZkR__DBksY" libraries={['places']}>
+  <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLEAPI} libraries={['places']}>
 
 
   {tele &&

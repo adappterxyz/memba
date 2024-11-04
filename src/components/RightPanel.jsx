@@ -3,11 +3,12 @@ import { Drawer, Button, Tabs, Tab, useTheme, useMediaQuery, Typography, Box, Di
 import { useTonAddress , TonConnectButton } from '@tonconnect/ui-react';
 import { Clear, Lock } from '@mui/icons-material';
 import CreatePOI from './CreatePOI';
-import CreateCommunity from './CreateCommunity';
 import ViewMembership from './ViewMembership';
 import Preferences from './Preferences';
 import Bookmarked from './Bookmarked';
+import Tasks from './Tasks';
 
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import LocationOnIcon from '@mui/icons-material/AddLocation';
 import GroupIcon from '@mui/icons-material/Group';
 import MembershipIcon from '@mui/icons-material/VerifiedUser';
@@ -34,7 +35,8 @@ const RightPanel = ({page,setPage,fetchImages,loadInitialImages,effectiveResults
   const [walletAddress, setWalletAddress] = useState({ userFriendly: '', raw: '' });
   const [toggleCreator, setToggleCreator] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
-  const [isFiltered, setIsFiltered] = useState(true);
+  const [isFiltered, setIsFiltered] = useState(false);
+  const [tasksOpen, setTasksOpen] = useState(false); // State to handle Tasks dialog
 
   useEffect(() => {
     if (userFriendlyAddress && rawAddress) {
@@ -119,8 +121,11 @@ const RightPanel = ({page,setPage,fetchImages,loadInitialImages,effectiveResults
     setPanelIsVisible(!panelIsVisible);
     //if close
     if(isFiltered){
-     fetchImages(page);
+      console.log(1111);
+      setIsFiltered(false);
+     await claim();
     }
+    
   };
   const drawerWidth = isMobile ? 320 : 540;
   const toggleTabPosition = panelIsVisible ? (drawerWidth - 10) : (-10);
@@ -130,9 +135,9 @@ const RightPanel = ({page,setPage,fetchImages,loadInitialImages,effectiveResults
     switch (activeTab) {
    //   case 'CreatePOI':
       case 'ViewMembership':
-        return <ViewMembership setIsLoading={setIsLoading} authorship={authorship} setAuthorship={setAuthorship} setTokens={setTokens}  setGroup={setGroup} setMembershipaccess={setMembershipaccess} group={group} membershipaccess={membershipaccess} membership={membership} setMembership={setMembership}/>;
+        return <ViewMembership setIsFiltered={setIsFiltered} setIsLoading={setIsLoading} authorship={authorship} setAuthorship={setAuthorship} setTokens={setTokens}  setGroup={setGroup} setMembershipaccess={setMembershipaccess} group={group} membershipaccess={membershipaccess} membership={membership} setMembership={setMembership}/>;
       case 'Preferences':
-        return <Preferences initPref={initPref} setInitPref={setInitPref} />;
+        return <Preferences setIsFiltered={setIsFiltered} initPref={initPref} setInitPref={setInitPref} />;
       case 'Bookmarked':
         return <Bookmarked setbookmarkinfo={setbookmarkinfo} bookmarkinfo={bookmarkinfo} bookmarks={bookmarks} setBookmarks={setBookmarks}/>;
       default:
@@ -152,7 +157,7 @@ const RightPanel = ({page,setPage,fetchImages,loadInitialImages,effectiveResults
               {authorship.length>0 &&(<button className="addbtn" onClick={()=>{setToggleCreator(!toggleCreator)}}>
               {toggleCreator ? (<Clear />):(<LocationOnIcon />) }
               </button>) }
-        {toggleCreator && (<CreatePOI authorship={authorship} setIsLoading={setIsLoading} setToggleCreator={setToggleCreator} setTokens={setTokens} group={group} coordinates={coordinates} userId={userId} walletAddress={walletAddress}   />
+        {(toggleCreator && !panelIsVisible) && (<CreatePOI authorship={authorship} setIsLoading={setIsLoading} setToggleCreator={setToggleCreator} setTokens={setTokens} group={group} coordinates={coordinates} userId={userId} walletAddress={walletAddress}   />
         )}
   
           
@@ -211,7 +216,30 @@ const RightPanel = ({page,setPage,fetchImages,loadInitialImages,effectiveResults
 
         <div className="rendered">
         {renderContent()}
-      </div>
+      </div>      
+      {activeTab === 'Preferences' ? (
+  <Button     onClick={() => setTasksOpen(true)}
+    variant="contained"
+    sx={{
+      width: '100%',
+      py: 2,
+      borderRadius: 0,
+      fontSize: '1rem',
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      backgroundColor: '#1a73e8',
+      color: '#fff',
+      '&:hover': {
+        backgroundColor: '#1765cc',
+      },
+    }}
+  >
+    <WorkspacePremiumIcon sx={{ mr: 1 }} />
+    Tasks
+  </Button>
+) : null}
+
       </Drawer>
       <Tab
         sx={{
@@ -239,6 +267,8 @@ const RightPanel = ({page,setPage,fetchImages,loadInitialImages,effectiveResults
         icon={<span>{panelIsVisible ? '▲ Hide' : '▼ Menu'}</span>}
         onClick={toggleVisibility}
       />
+
+<Tasks open={tasksOpen} userId={userId} onClose={() => setTasksOpen(false)} />
     </div>
   );
 };
